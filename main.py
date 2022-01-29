@@ -1,4 +1,7 @@
-import json, discord, requests, datetime
+import json
+import discord
+import requests
+import datetime
 from colorama import Fore, init
 from discord.ext import tasks
 
@@ -7,14 +10,19 @@ token = 'TOKEN'
 init(autoreset=True)
 client = discord.Client()
 
+
 @tasks.loop(hours=5)
 async def updateList():
-    contents = requests.get("https://raw.githubusercontent.com/nikolaischunk/discord-phishing-links/main/domain-list.json").text
+    contents = requests.get(
+        "https://raw.githubusercontent.com/nikolaischunk/discord-phishing-links/main/domain-list.json").text
     f = open('./domains.json', 'wb')
     f.write(contents.encode())
 
+
 @client.event
 async def on_ready():
+    if not hasattr(client, 'appinfo'):
+        client.appinfo = await client.application_info()
     print(Fore.GREEN + 'Logged in as {0.user}'.format(client))
     print(Fore.BLUE + 'Starting list updater...')
     try:
@@ -22,6 +30,9 @@ async def on_ready():
     except Exception as e:
         print(e)
     print(Fore.GREEN + 'Finished getting links, bot is ready')
+    print(Fore.BLUE +
+          "Invite your bot via this link" + Fore.RED + " https://discord.com/api/oauth2/authorize?client_id=" + str(client.appinfo.id) + "&permissions=8&scope=bot")
+
 
 @client.event
 async def on_message(message):
