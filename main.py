@@ -5,7 +5,7 @@ import datetime
 from colorama import Fore, init
 from discord.ext import tasks
 
-token = ''
+token = 'TOKEN'
 
 init(autoreset=True)
 client = discord.Client()
